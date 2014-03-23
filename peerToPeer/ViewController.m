@@ -19,14 +19,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSLog(@"initial load");
-    
+   
 }
 
+#pragma mark - UI ACtions
+- (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender
+{
+    UISwipeGestureRecognizerDirection direction=[(UISwipeGestureRecognizer *) sender direction];
+    switch (direction) {
+            
+        case UISwipeGestureRecognizerDirectionLeft:
+            NSLog(@"left");
+            break;
+            
+        case UISwipeGestureRecognizerDirectionRight:
+            NSLog(@"right");
+            break;
 
-
-
+        case UISwipeGestureRecognizerDirectionUp:
+            NSLog(@"up");
+            break;
+            
+        default:
+            NSLog(@"down");
+            break;
+    }
+}
 
 
 
@@ -36,5 +54,4 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 @end

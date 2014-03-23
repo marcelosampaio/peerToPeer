@@ -10,4 +10,9 @@
 
 @interface ViewController : UIViewController
 
+
+
+- (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender;
+
+
 @end
