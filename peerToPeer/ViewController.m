@@ -65,6 +65,9 @@
 
 -(void)loadCellAtCoordinateX:(float)coordinateX CoordinateY:(float)coordinateY
 {
+    NSLog(@"x=%f y=%f",coordinateX,coordinateY);
+    
+    
     UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGTH)];
     img.backgroundColor=[UIColor blackColor];
     [self.view addSubview:img];
