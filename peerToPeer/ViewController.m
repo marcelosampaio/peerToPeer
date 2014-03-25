@@ -148,82 +148,82 @@
 #pragma mark - Touch Processing
 -(void)swiped:(NSString *)direction
 {
-    // Determine Origin and Target
-    CGPoint origin=[self getOrigin];
-    CGPoint target=CGPointMake(self.blankRow, self.blankColumn);
-
+    int moveToRowLocation=0;
+    int moveToColumnLocation;
+    
+    int rowSeed=0;
+    int columnSeed=0;
     
     if ([direction isEqualToString:@"left"]) {
         if (self.blankColumn==1) {
             NSLog(@"LEFT - invalid swipe");
         } else {
-            NSLog(@"LEFT - OK");
+            moveToRowLocation=self.blankRow-1;
+            moveToColumnLocation=self.blankColumn;
+            
+            rowSeed=(-1)*BOARD_CELL_WIDTH;
         }
         
     } else if (([direction isEqualToString:@"right"])) {
         if (self.blankColumn==4) {
             NSLog(@"RIGHT - invalid swipe");
         } else {
-            NSLog(@"RIGHT - OK");
+            moveToRowLocation=self.blankRow+1;
+            moveToColumnLocation=self.blankColumn;
+            
+            rowSeed=BOARD_CELL_WIDTH;
         }
     } else if (([direction isEqualToString:@"up"])) {
         if (self.blankRow==4) {
             NSLog(@"UP - invalid swipe");
         } else {
-            NSLog(@"UP - OK");
+            moveToRowLocation=self.blankRow;
+            moveToColumnLocation=self.self.blankColumn-10;
+            
+            columnSeed=(-1)*BOARD_CELL_HEIGTH;
         }
     } else if (([direction isEqualToString:@"down"])) {
         if (self.blankRow==1) {
             NSLog(@"DOWN - swipe invalido");
         } else {
-            NSLog(@"DOWN - OK");
+            moveToRowLocation=self.blankRow;
+            moveToColumnLocation=self.self.blankColumn+10;
+            
+            columnSeed=BOARD_CELL_HEIGTH;
         }
     }
-    
+    int movingLocation=(moveToRowLocation*10)+moveToColumnLocation;
+
     // Animation
     
-//    // INICIO DA ANIMACAO
-//    [UIView animateWithDuration:0.95f animations:^(void)
-//     // Aqui se faz a animacao
-//     {
-//         self.imgRover.center=coordenadaDestonoDoHover;
-//         
-//         //NSLog(@"coordX=%f",coordX);
-//         //NSLog(@"coordY=%f",coordY);
-//         
-//         
-//     } completion:^(BOOL finished)
-//     //  Aqui executamos os procedimentos logo apos o termino da animacao
-//     {
-//         //NSLog(@"vamos reentrar");
-//         [self executaInstrucoes:destinos];
-//     }];
-//    // FIM DA ANIMACAO
-//    [UIView commitAnimations];
+    // INICIO DA ANIMACAO
+    [UIView animateWithDuration:0.95f animations:^(void)
+     // Aqui se faz a animacao
+     {
+         for (UIView *subview in self.view.subviews)
+         {
+             if (subview.tag==movingLocation) {
+                 NSLog(@"found origin cell in subviews    tag=%d",subview.tag);
+                 NSLog(@"         > Original center x=%f   y=%f",subview.center.x,subview.center.y);
+                 
+                 CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
+                 subview.center=target;
+
+             }
+         }
+
+         
+
+     } completion:^(BOOL finished)
+     //  Aqui executamos os procedimentos logo apos o termino da animacao
+     {
+     }];
+    // FIM DA ANIMACAO
+    [UIView commitAnimations];
 
     
 }
 
-#pragma mark - Working Methods
--(CGPoint)getOrigin
-{
-    CGPoint origin=CGPointMake(0, 0);
-
-    int numericLocation=(self.blankRow*10)+self.blankColumn;
-    
-    // get the cell to be animated
-    for (UIView *subview in self.view.subviews)
-    {
-        if (subview.tag==numericLocation) {
-            NSLog(@"found blank cell in subviews    tag=%d",subview.tag);
-        }
-        NSLog(@"..... retrieving tag=%d",subview.tag);
-    }
-    
-    
-    
-    return origin;
-}
 
 #pragma mark - Memory Warning
 - (void)didReceiveMemoryWarning
