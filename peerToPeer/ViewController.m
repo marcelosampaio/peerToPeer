@@ -22,11 +22,21 @@
 @property float xPrint;
 @property float yPrint;
 
+@property int blankSpaceCreated;
+@property int blankSpacePositionNumber;
+
+@property int blankRow;
+@property int blankColumn;
+
 @end
 
 @implementation ViewController
 
 @synthesize xPrint,yPrint;
+@synthesize blankSpaceCreated,blankSpacePositionNumber;
+@synthesize swipeBaseX,swipeBaseY;
+@synthesize blankCandidates;
+@synthesize blankColumn,blankRow;
 
 
 #pragma mark - Initilization
@@ -42,6 +52,13 @@
 
 -(void)createBoard
 {
+    // Blank Space in the board
+    blankRow=0;
+    blankColumn=0;
+    
+    // Available cell for the blank space
+    self.blankCandidates=[[NSArray alloc]initWithObjects:@"11",@"12",@"13",@"14",@"21",@"22",@"23",@"24",@"31",@"32",@"33",@"34",@"41",@"42",@"43",@"44", nil];
+    self.blankSpaceCreated=NO;
     for (int rowIndex=0; rowIndex<BOARD_ROWS; rowIndex++) {
         for (int columnIndex=0; columnIndex<BOARD_COLUMNS; columnIndex++) {
             [self createBoardCellAtRow:rowIndex Column:columnIndex];
@@ -60,17 +77,42 @@
     } else {
         xPrint=xPrint+BOARD_CELL_WIDTH;
     }
-    [self loadCellAtCoordinateX:xPrint CoordinateY:yPrint];
+    [self loadCellAtCoordinateX:xPrint CoordinateY:yPrint RowIndex:rowIndex ColumnIndex:columnIndex];
 }
 
--(void)loadCellAtCoordinateX:(float)coordinateX CoordinateY:(float)coordinateY
+-(void)loadCellAtCoordinateX:(float)coordinateX CoordinateY:(float)coordinateY RowIndex:(int)rowIndex ColumnIndex:(int)columnIndex
 {
-    NSLog(@"x=%f y=%f",coordinateX,coordinateY);
+    int numericLocation=(rowIndex*10)+columnIndex;
+
     
+    // Generate random spare space on the board
+    if (!blankSpaceCreated) {
+        int num=arc4random() %16;
+
+        blankSpacePositionNumber=[[self.blankCandidates objectAtIndex:num]intValue];
+        blankSpaceCreated=YES;
+        
+        blankRow=blankSpacePositionNumber/10;
+        blankColumn=blankSpacePositionNumber-(blankRow*10);
+
+    }
     
-    UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGTH)];
-    img.backgroundColor=[UIColor blackColor];
-    [self.view addSubview:img];
+    if (blankRow==rowIndex && blankColumn==columnIndex) {
+        self.swipeBaseX=coordinateX;
+        self.swipeBaseY=coordinateY;
+    } else {
+        UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGTH)];
+        
+        if (rowIndex==0 || columnIndex==0 || rowIndex==5 || columnIndex==5) {
+            img.backgroundColor=[UIColor darkGrayColor];
+        } else {
+            img.backgroundColor=[UIColor lightGrayColor];
+        }
+        
+        img.tag=numericLocation;
+        [self.view addSubview:img];
+
+    }
 }
 
 
@@ -106,7 +148,62 @@
 #pragma mark - Touch Processing
 -(void)swiped:(NSString *)direction
 {
-    NSLog(@"swiped %@",direction);
+    // Determine Origin and Target
+    CGPoint origin=CGPointMake(0,0);
+    CGPoint target=CGPointMake(self.blankRow, self.blankColumn);
+    
+    NSLog(@"blanRow=%d   blankColumn=%d",blankRow,blankColumn);
+    
+    
+    if ([direction isEqualToString:@"left"]) {
+        if (self.blankColumn==1) {
+            NSLog(@"LEFT - invalid swipe");
+        } else {
+            NSLog(@"LEFT - OK");
+        }
+        
+    } else if (([direction isEqualToString:@"right"])) {
+        if (self.blankColumn==4) {
+            NSLog(@"RIGHT - invalid swipe");
+        } else {
+            NSLog(@"RIGHT - OK");
+        }
+    } else if (([direction isEqualToString:@"up"])) {
+        if (self.blankRow==4) {
+            NSLog(@"UP - invalid swipe");
+        } else {
+            NSLog(@"UP - OK");
+        }
+    } else if (([direction isEqualToString:@"down"])) {
+        if (self.blankRow==1) {
+            NSLog(@"DOWN - swipe invalido");
+        } else {
+            NSLog(@"DOWN - OK");
+        }
+    }
+    
+    // Animation
+    
+//    // INICIO DA ANIMACAO
+//    [UIView animateWithDuration:0.95f animations:^(void)
+//     // Aqui se faz a animacao
+//     {
+//         self.imgRover.center=coordenadaDestonoDoHover;
+//         
+//         //NSLog(@"coordX=%f",coordX);
+//         //NSLog(@"coordY=%f",coordY);
+//         
+//         
+//     } completion:^(BOOL finished)
+//     //  Aqui executamos os procedimentos logo apos o termino da animacao
+//     {
+//         //NSLog(@"vamos reentrar");
+//         [self executaInstrucoes:destinos];
+//     }];
+//    // FIM DA ANIMACAO
+//    [UIView commitAnimations];
+
+    
 }
 
 
