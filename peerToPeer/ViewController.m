@@ -11,10 +11,11 @@
 // Board Settings Values
 #define BOARD_ROWS              6
 #define BOARD_COLUMNS           6
-#define BOARD_CELL_HEIGTH       50
+#define BOARD_CELL_HEIGHT       50
 #define BOARD_CELL_WIDTH        50
 #define BOARD_BASE_COORD_X      10
 #define BOARD_BASE_COORD_Y      130
+#define BOARD_ANIMATION_TIME    0.10f
 
 
 @interface ViewController ()
@@ -34,10 +35,9 @@
 
 @synthesize xPrint,yPrint;
 @synthesize blankSpaceCreated,blankSpacePositionNumber;
-@synthesize swipeBaseX,swipeBaseY;
+
 @synthesize blankCandidates;
 @synthesize blankColumn,blankRow;
-
 
 #pragma mark - Initilization
 - (void)viewDidLoad
@@ -58,6 +58,7 @@
     
     // Available cell for the blank space
     self.blankCandidates=[[NSArray alloc]initWithObjects:@"11",@"12",@"13",@"14",@"21",@"22",@"23",@"24",@"31",@"32",@"33",@"34",@"41",@"42",@"43",@"44", nil];
+
     self.blankSpaceCreated=NO;
     for (int rowIndex=0; rowIndex<BOARD_ROWS; rowIndex++) {
         for (int columnIndex=0; columnIndex<BOARD_COLUMNS; columnIndex++) {
@@ -73,7 +74,7 @@
         yPrint=BOARD_BASE_COORD_Y;
     } else if (columnIndex==0) {
         xPrint=BOARD_BASE_COORD_X;
-        yPrint=yPrint+BOARD_CELL_HEIGTH;
+        yPrint=yPrint+BOARD_CELL_HEIGHT;
     } else {
         xPrint=xPrint+BOARD_CELL_WIDTH;
     }
@@ -98,15 +99,21 @@
     }
     
     if (blankRow==rowIndex && blankColumn==columnIndex) {
-        self.swipeBaseX=coordinateX;
-        self.swipeBaseY=coordinateY;
+
     } else {
-        UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGTH)];
-        
+        UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGHT)];
         if (rowIndex==0 || columnIndex==0 || rowIndex==5 || columnIndex==5) {
             img.backgroundColor=[UIColor darkGrayColor];
         } else {
-            img.backgroundColor=[UIColor lightGrayColor];
+            if (rowIndex==1) {
+                img.backgroundColor=[UIColor yellowColor];
+            }else if (rowIndex==2) {
+                img.backgroundColor=[UIColor greenColor];
+            }else if (rowIndex==3) {
+                img.backgroundColor=[UIColor blueColor];
+            }else{
+                img.backgroundColor=[UIColor redColor];
+            }
         }
         
         img.tag=numericLocation;
@@ -114,8 +121,6 @@
 
     }
 }
-
-
 
 
 #pragma mark - UI ACtions
@@ -148,63 +153,76 @@
 #pragma mark - Touch Processing
 -(void)swiped:(NSString *)direction
 {
-    int moveToRowLocation=0;
+    int moveToRowLocation;
     int moveToColumnLocation;
     
     int rowSeed=0;
     int columnSeed=0;
     
+    NSLog(@"BEFORE  Blank Space is at blankRow=%d  blankColumn=%d",self.blankRow,self.blankColumn);
+    
+    
     if ([direction isEqualToString:@"left"]) {
-        if (self.blankColumn==1) {
+        if (self.blankColumn==4) {
             NSLog(@"LEFT - invalid swipe");
+            return;
         } else {
-            moveToRowLocation=self.blankRow-1;
-            moveToColumnLocation=self.blankColumn;
+            moveToRowLocation=self.blankRow;
+            moveToColumnLocation=self.blankColumn+1;
             
             rowSeed=(-1)*BOARD_CELL_WIDTH;
         }
         
     } else if (([direction isEqualToString:@"right"])) {
-        if (self.blankColumn==4) {
+        if (self.blankColumn==1) {
             NSLog(@"RIGHT - invalid swipe");
+            return;
         } else {
-            moveToRowLocation=self.blankRow+1;
-            moveToColumnLocation=self.blankColumn;
+            moveToRowLocation=self.blankRow;
+            moveToColumnLocation=self.blankColumn-1;
             
             rowSeed=BOARD_CELL_WIDTH;
         }
     } else if (([direction isEqualToString:@"up"])) {
         if (self.blankRow==4) {
             NSLog(@"UP - invalid swipe");
+            return;
         } else {
-            moveToRowLocation=self.blankRow;
-            moveToColumnLocation=self.self.blankColumn-10;
+            moveToRowLocation=self.blankRow+1;
+            moveToColumnLocation=self.blankColumn;
             
-            columnSeed=(-1)*BOARD_CELL_HEIGTH;
+            columnSeed=(-1)*BOARD_CELL_HEIGHT;
         }
     } else if (([direction isEqualToString:@"down"])) {
         if (self.blankRow==1) {
             NSLog(@"DOWN - swipe invalido");
+            return;
         } else {
-            moveToRowLocation=self.blankRow;
-            moveToColumnLocation=self.self.blankColumn+10;
+            moveToRowLocation=self.blankRow-1;
+            moveToColumnLocation=self.blankColumn;
             
-            columnSeed=BOARD_CELL_HEIGTH;
+            columnSeed=BOARD_CELL_HEIGHT;
         }
     }
     int movingLocation=(moveToRowLocation*10)+moveToColumnLocation;
+    NSLog(@"WILL MOVE object FROM %d        TO location %d%d",movingLocation,self.blankRow,self.blankColumn);
 
     // Animation
-    
+
     // INICIO DA ANIMACAO
-    [UIView animateWithDuration:0.95f animations:^(void)
+    [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
      // Aqui se faz a animacao
      {
          for (UIView *subview in self.view.subviews)
          {
              if (subview.tag==movingLocation) {
                  NSLog(@"found origin cell in subviews    tag=%d",subview.tag);
-                 NSLog(@"         > Original center x=%f   y=%f",subview.center.x,subview.center.y);
+//                 NSLog(@"         > Original center x=%f   y=%f",subview.center.x,subview.center.y);
+
+                 NSString *newRowLocation=[NSString stringWithFormat:@"%d",moveToRowLocation];
+                 NSString *newColumnLocation=[NSString stringWithFormat:@"%d",moveToColumnLocation];
+                 [[NSUserDefaults standardUserDefaults] setObject:newRowLocation forKey:@"newRowLocation"];
+                 [[NSUserDefaults standardUserDefaults] setObject:newColumnLocation forKey:@"newColumnLocation"];
                  
                  CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
                  subview.center=target;
@@ -216,10 +234,19 @@
 
      } completion:^(BOOL finished)
      //  Aqui executamos os procedimentos logo apos o termino da animacao
+
      {
      }];
     // FIM DA ANIMACAO
     [UIView commitAnimations];
+    
+    // Update references
+    NSString *newRowLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newRowLocation"];
+    NSString *newColumnLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newColumnLocation"];
+    self.blankRow=[newRowLocation intValue];
+    self.blankColumn=[newColumnLocation intValue];
+
+    
 
     
 }

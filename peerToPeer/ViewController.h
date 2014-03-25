@@ -12,11 +12,10 @@
 
 
 // Swipe Gesture Control
-@property float swipeBaseX;
-@property float swipeBaseY;
+//@property float swipeBaseX;
+//@property float swipeBaseY;
+
 @property(nonatomic,strong) NSArray *blankCandidates;
-
-
 
 - (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender;
 
