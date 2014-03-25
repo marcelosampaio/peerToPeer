@@ -149,11 +149,9 @@
 -(void)swiped:(NSString *)direction
 {
     // Determine Origin and Target
-    CGPoint origin=CGPointMake(0,0);
+    CGPoint origin=[self getOrigin];
     CGPoint target=CGPointMake(self.blankRow, self.blankColumn);
-    
-    NSLog(@"blanRow=%d   blankColumn=%d",blankRow,blankColumn);
-    
+
     
     if ([direction isEqualToString:@"left"]) {
         if (self.blankColumn==1) {
@@ -206,6 +204,26 @@
     
 }
 
+#pragma mark - Working Methods
+-(CGPoint)getOrigin
+{
+    CGPoint origin=CGPointMake(0, 0);
+
+    int numericLocation=(self.blankRow*10)+self.blankColumn;
+    
+    // get the cell to be animated
+    for (UIView *subview in self.view.subviews)
+    {
+        if (subview.tag==numericLocation) {
+            NSLog(@"found blank cell in subviews    tag=%d",subview.tag);
+        }
+        NSLog(@"..... retrieving tag=%d",subview.tag);
+    }
+    
+    
+    
+    return origin;
+}
 
 #pragma mark - Memory Warning
 - (void)didReceiveMemoryWarning
