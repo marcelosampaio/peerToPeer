@@ -71,8 +71,7 @@
     }
     
     // Debug my board dictionary containg the cells
-    NSString *key;
-    for (key in self.cells) {
+    for (NSString *key in self.cells) {
         NSLog(@"key=%@  value=%@",key,[self.cells objectForKey:key]);
     }
     
@@ -223,6 +222,9 @@
 
     // Animation
     // INICIO DA ANIMACAO
+    __block NSString *newRowLocation;
+    __block NSString *newColumnLocation;
+    
     [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
      // Aqui se faz a animacao
      {
@@ -232,10 +234,8 @@
                  NSLog(@"found origin cell in subviews    tag=%d",subview.tag);
 //                 NSLog(@"         > Original center x=%f   y=%f",subview.center.x,subview.center.y);
 
-                 NSString *newRowLocation=[NSString stringWithFormat:@"%d",moveToRowLocation];
-                 NSString *newColumnLocation=[NSString stringWithFormat:@"%d",moveToColumnLocation];
-                 [[NSUserDefaults standardUserDefaults] setObject:newRowLocation forKey:@"newRowLocation"];
-                 [[NSUserDefaults standardUserDefaults] setObject:newColumnLocation forKey:@"newColumnLocation"];
+                 newRowLocation=[NSString stringWithFormat:@"%d",moveToRowLocation];
+                 newColumnLocation=[NSString stringWithFormat:@"%d",moveToColumnLocation];
 
                  CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
                  subview.center=target;
@@ -247,19 +247,16 @@
 
      } completion:^(BOOL finished)
      //  Aqui executamos os procedimentos logo apos o termino da animacao
-
      {
      }];
     // FIM DA ANIMACAO
     [UIView commitAnimations];
 
     // Update references
-    NSString *newRowLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newRowLocation"];
-    NSString *newColumnLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newColumnLocation"];
     self.blankRow=[newRowLocation intValue];
     self.blankColumn=[newColumnLocation intValue];
 
-    
+    NSLog(@"------------------->%@",newRowLocation);
 
     
 }
