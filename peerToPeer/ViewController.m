@@ -39,6 +39,8 @@
 @synthesize blankCandidates;
 @synthesize blankColumn,blankRow;
 
+@synthesize cells;
+
 #pragma mark - Initilization
 - (void)viewDidLoad
 {
@@ -47,7 +49,6 @@
     // Create board
     [self createBoard];
 
-   
 }
 
 -(void)createBoard
@@ -58,6 +59,9 @@
     
     // Available cell for the blank space
     self.blankCandidates=[[NSArray alloc]initWithObjects:@"11",@"12",@"13",@"14",@"21",@"22",@"23",@"24",@"31",@"32",@"33",@"34",@"41",@"42",@"43",@"44", nil];
+    
+    // Relationship between cell & content
+    self.cells=[[NSMutableDictionary alloc]init];
 
     self.blankSpaceCreated=NO;
     for (int rowIndex=0; rowIndex<BOARD_ROWS; rowIndex++) {
@@ -65,6 +69,14 @@
             [self createBoardCellAtRow:rowIndex Column:columnIndex];
         }
     }
+    
+    // Debug my board dictionary containg the cells
+    NSString *key;
+    for (key in self.cells) {
+        NSLog(@"key=%@  value=%@",key,[self.cells objectForKey:key]);
+    }
+    
+    
 }
 
 -(void)createBoardCellAtRow:(int)rowIndex Column:(int)columnIndex
@@ -84,7 +96,8 @@
 -(void)loadCellAtCoordinateX:(float)coordinateX CoordinateY:(float)coordinateY RowIndex:(int)rowIndex ColumnIndex:(int)columnIndex
 {
     int numericLocation=(rowIndex*10)+columnIndex;
-
+    NSString *location=[NSString stringWithFormat:@"%d",numericLocation];
+    
     
     // Generate random spare space on the board
     if (!blankSpaceCreated) {
@@ -99,7 +112,7 @@
     }
     
     if (blankRow==rowIndex && blankColumn==columnIndex) {
-
+        [self.cells setValue:location forKey:@"0"];
     } else {
         UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGHT)];
         if (rowIndex==0 || columnIndex==0 || rowIndex==5 || columnIndex==5) {
@@ -114,6 +127,7 @@
             }else{
                 img.backgroundColor=[UIColor redColor];
             }
+            [self.cells setValue:location forKey:location];
         }
         
         img.tag=numericLocation;
@@ -208,7 +222,6 @@
     NSLog(@"WILL MOVE object FROM %d        TO location %d%d",movingLocation,self.blankRow,self.blankColumn);
 
     // Animation
-
     // INICIO DA ANIMACAO
     [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
      // Aqui se faz a animacao
@@ -223,7 +236,7 @@
                  NSString *newColumnLocation=[NSString stringWithFormat:@"%d",moveToColumnLocation];
                  [[NSUserDefaults standardUserDefaults] setObject:newRowLocation forKey:@"newRowLocation"];
                  [[NSUserDefaults standardUserDefaults] setObject:newColumnLocation forKey:@"newColumnLocation"];
-                 
+
                  CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
                  subview.center=target;
 
@@ -239,7 +252,7 @@
      }];
     // FIM DA ANIMACAO
     [UIView commitAnimations];
-    
+
     // Update references
     NSString *newRowLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newRowLocation"];
     NSString *newColumnLocation=[[NSUserDefaults standardUserDefaults]objectForKey:@"newColumnLocation"];

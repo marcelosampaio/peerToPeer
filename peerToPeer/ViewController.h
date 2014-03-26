@@ -17,6 +17,9 @@
 
 @property(nonatomic,strong) NSArray *blankCandidates;
 
+// Relationship between cell & content (object's tag)
+@property(nonatomic,strong) NSMutableDictionary *cells;
+
 - (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender;
 
 
