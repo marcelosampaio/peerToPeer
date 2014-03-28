@@ -70,12 +70,9 @@
         }
     }
     
-    // Debug my board dictionary containg the cells
-    for (NSString *key in self.cells) {
-        NSLog(@"key=%@  value=%@",key,[self.cells objectForKey:key]);
+    for (NSString *key in self.cells){
+        NSLog(@"key=%@   value=%@",key,[self.cells objectForKey:key]);
     }
-    
-    
 }
 
 -(void)createBoardCellAtRow:(int)rowIndex Column:(int)columnIndex
@@ -104,14 +101,17 @@
 
         blankSpacePositionNumber=[[self.blankCandidates objectAtIndex:num]intValue];
         blankSpaceCreated=YES;
-        
+//        
         blankRow=blankSpacePositionNumber/10;
         blankColumn=blankSpacePositionNumber-(blankRow*10);
+        
+        
+        NSLog(@"generated blank Row & Column  row=%d  column=%d",self.blankRow,self.blankColumn);
 
     }
     
     if (blankRow==rowIndex && blankColumn==columnIndex) {
-        [self.cells setValue:location forKey:@"0"];
+        [self.cells setValue:@"0" forKey:location];
     } else {
         UIImageView *img=[[UIImageView alloc]initWithFrame:CGRectMake(coordinateX, coordinateY, BOARD_CELL_WIDTH, BOARD_CELL_HEIGHT)];
         if (rowIndex==0 || columnIndex==0 || rowIndex==5 || columnIndex==5) {
@@ -171,8 +171,17 @@
     
     int rowSeed=0;
     int columnSeed=0;
+
+    // =====================================================
+    // Get blank location at any swipe touch
+    // =====================================================
+    self.blankSpacePositionNumber=[self blankSpaceLocation];
+    //======================================================
     
-    NSLog(@"BEFORE  Blank Space is at blankRow=%d  blankColumn=%d",self.blankRow,self.blankColumn);
+    self.blankRow=blankSpacePositionNumber/10;
+    self.blankColumn=blankSpacePositionNumber-(blankRow*10);
+    
+    NSLog(@" ********  BASE  Blank Space is at blankRow=%d  blankColumn=%d",self.blankRow,self.blankColumn);
     
     
     if ([direction isEqualToString:@"left"]) {
@@ -218,12 +227,12 @@
         }
     }
     int movingLocation=(moveToRowLocation*10)+moveToColumnLocation;
-    NSLog(@"WILL MOVE object FROM %d        TO location %d%d",movingLocation,self.blankRow,self.blankColumn);
+    NSLog(@" ******    WILL MOVE object FROM %d        TO location %d%d",movingLocation,self.blankRow,self.blankColumn);
 
     // Animation
     // INICIO DA ANIMACAO
-    __block NSString *newRowLocation;
-    __block NSString *newColumnLocation;
+//    __block NSString *newRowLocation;
+//    __block NSString *newColumnLocation;
     
     [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
      // Aqui se faz a animacao
@@ -231,12 +240,8 @@
          for (UIView *subview in self.view.subviews)
          {
              if (subview.tag==movingLocation) {
-                 NSLog(@"found origin cell in subviews    tag=%d",subview.tag);
-//                 NSLog(@"         > Original center x=%f   y=%f",subview.center.x,subview.center.y);
-
-                 newRowLocation=[NSString stringWithFormat:@"%d",moveToRowLocation];
-                 newColumnLocation=[NSString stringWithFormat:@"%d",moveToColumnLocation];
-
+                 NSLog(@"                   **** found origin cell in subviews    tag=%d",subview.tag);
+                 
                  CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
                  subview.center=target;
 
@@ -253,12 +258,44 @@
     [UIView commitAnimations];
 
     // Update references
-    self.blankRow=[newRowLocation intValue];
-    self.blankColumn=[newColumnLocation intValue];
+    
+    // Update board cells array
+    // location where was blank is set to origin location of the movement
+    int blankLocation=(self.blankRow*10)+self.blankColumn;
+    [self.cells setValue:[NSString stringWithFormat:@"%d",movingLocation] forKey:[NSString stringWithFormat:@"%d",blankLocation]];
+    NSLog(@"update -1- board's cell key=%@   value=%@",[NSString stringWithFormat:@"%d",blankLocation],[NSString stringWithFormat:@"%d",movingLocation]);
+    
+    // origin location is set to blak tag key 0
+    [self.cells setValue:@"0" forKey:[NSString stringWithFormat:@"%d",movingLocation]];
+    NSLog(@"update -2- board's cell key=%@   value=%@",[NSString stringWithFormat:@"%d",movingLocation],@"0");
+    
+    
+    self.blankRow=moveToRowLocation;
+    self.blankColumn=moveToColumnLocation;
+    
 
-    NSLog(@"------------------->%@",newRowLocation);
+    NSLog(@"--------NEW LOCATION----------->%d%d",self.blankRow,self.blankColumn);
+    
+    for (NSString *key in self.cells) {
+        NSLog(@"----------->key=%@  value=%@",key,[self.cells objectForKey:key]);
+    }
 
     
+}
+
+#pragma mark - Working Methods
+-(int)blankSpaceLocation
+{
+    int blankLocation=0;
+    // determine Blank Space Location
+    for (NSString *key in self.cells) {
+        NSString *value=[self.cells objectForKey:key];
+        if ([value isEqualToString:@"0"]) {
+            blankLocation=[key intValue];
+            NSLog(@"********************* ###### found blankSpace !!!! :)    location=%d",blankLocation);
+        }
+    }
+    return blankLocation;
 }
 
 
