@@ -21,6 +21,7 @@
 		9CA70EA518DE76F20098E4B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA70E8718DE76F20098E4B3 /* UIKit.framework */; };
 		9CA70EAD18DE76F20098E4B3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9CA70EAB18DE76F20098E4B3 /* InfoPlist.strings */; };
 		9CA70EAF18DE76F20098E4B3 /* peerToPeerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA70EAE18DE76F20098E4B3 /* peerToPeerTests.m */; };
+		9CA804B118E8486A0055A28C /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA804B018E8486A0055A28C /* Cell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		9CA70EAA18DE76F20098E4B3 /* peerToPeerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "peerToPeerTests-Info.plist"; sourceTree = "<group>"; };
 		9CA70EAC18DE76F20098E4B3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9CA70EAE18DE76F20098E4B3 /* peerToPeerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = peerToPeerTests.m; sourceTree = "<group>"; };
+		9CA804AF18E8486A0055A28C /* Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cell.h; sourceTree = "<group>"; };
+		9CA804B018E8486A0055A28C /* Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,8 @@
 			children = (
 				9CA70E9218DE76F20098E4B3 /* AppDelegate.h */,
 				9CA70E9318DE76F20098E4B3 /* AppDelegate.m */,
+				9CA804AF18E8486A0055A28C /* Cell.h */,
+				9CA804B018E8486A0055A28C /* Cell.m */,
 				9CA70E9518DE76F20098E4B3 /* Main.storyboard */,
 				9CA70E9818DE76F20098E4B3 /* ViewController.h */,
 				9CA70E9918DE76F20098E4B3 /* ViewController.m */,
@@ -250,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA70E9A18DE76F20098E4B3 /* ViewController.m in Sources */,
+				9CA804B118E8486A0055A28C /* Cell.m in Sources */,
 				9CA70E9418DE76F20098E4B3 /* AppDelegate.m in Sources */,
 				9CA70E9018DE76F20098E4B3 /* main.m in Sources */,
 			);
@@ -456,6 +462,7 @@
 				9CA70EB418DE76F30098E4B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9CA70EB518DE76F30098E4B3 /* Build configuration list for PBXNativeTarget "peerToPeerTests" */ = {
 			isa = XCConfigurationList;
@@ -464,6 +471,7 @@
 				9CA70EB718DE76F30098E4B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
