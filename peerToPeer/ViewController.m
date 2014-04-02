@@ -78,6 +78,13 @@
     for (Cell *cell in self.boardCells) {
         NSLog(@"CELL  location=%@       content=%@       x=%f  y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
     }
+
+    
+//    for (UIView *subView in self.view.subviews) {
+//        NSLog(@"VIEW  tag=%d",subView.tag);
+//    }
+//    
+
 }
 
 -(void)createBoardCellAtRow:(int)rowIndex Column:(int)columnIndex
@@ -111,7 +118,7 @@
         blankColumn=blankSpacePositionNumber-(blankRow*10);
         
         
-        NSLog(@"generated blank Row & Column  row=%d  column=%d",self.blankRow,self.blankColumn);
+        NSLog(@"generated blank Row & Column  ----> row=%d  column=%d",self.blankRow,self.blankColumn);
 
     }
     
@@ -233,85 +240,12 @@
         }
     }
     int movingLocation=(moveToRowLocation*10)+moveToColumnLocation;
-//    NSLog(@" ******    WILL MOVE object FROM %d        TO location %d%d",movingLocation,self.blankRow,self.blankColumn);
+    int spaceLocation=(self.blankRow*10)+self.blankColumn;
+//    NSLog(@" ******    WILL MOVE the content of object FROM %d        TO location %d%d        *************************",movingLocation,self.blankRow,self.blankColumn);
 
-    // Animation
-    // INICIO DA ANIMACAO
-//    __block NSString *newRowLocation;
-//    __block NSString *newColumnLocation;
+    // Animate board cells
+    [self boardAnimationFromLocation:movingLocation toLocation:spaceLocation];
     
-    [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
-     // Aqui se faz a animacao
-    {
-//        NSLog(@"...........search subView in subViews   moveLocation=%d",movingLocation);
-        
-        for (UIView *subview in self.view.subviews)
-        {
-            if (subview.tag==movingLocation) {
-//                NSLog(@"                   **** found origin cell in subviews    tag=%d",subview.tag);
-                
-                CGPoint target=CGPointMake(subview.center.x+rowSeed,subview.center.y+columnSeed);
-                subview.center=target;
-
-            }
-        }
-
-         
-
-     } completion:^(BOOL finished)
-     //  Aqui executamos os procedimentos logo apos o termino da animacao
-     {
-     }];
-    // FIM DA ANIMACAO
-    [UIView commitAnimations];
-
-    // Update references //
-    NSLog(@"***Step 1***");
-    // get location index in array -- Step 1  ----------------------------------
-    int locationIndex=[self locationIndex:@"9999"];
-    int tempValue=TEMP_VALUE_FACTOR+movingLocation;
-    
-    
-    Cell *newCell=[self.boardCells objectAtIndex:locationIndex];
-    newCell.locationContent=[NSString stringWithFormat:@"%d",tempValue];
-    
-    // Update array
-    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell];
-    // --------------------------------------------------------------------------
-
-    NSLog(@"***Step 2***    movinLocation=%d",movingLocation);
-    // get location index in array -- Step 2  ----------------------------------
-    locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",movingLocation]];
-
-    Cell *newCell2=[self.boardCells objectAtIndex:locationIndex];
-    newCell2.locationContent=@"9999";
-    
-    // Update array
-    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell2];
-    // --------------------------------------------------------------------------
-
-    NSLog(@"***Step 3***");
-    // get location index in array -- Step 3  ----------------------------------
-    locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",tempValue]];
-    
-    Cell *newCell3=[self.boardCells objectAtIndex:locationIndex];
-    tempValue=tempValue-TEMP_VALUE_FACTOR;
-    newCell3.locationContent=[NSString stringWithFormat:@"%d",tempValue];
-    
-    // Update array
-    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell3];
-    // --------------------------------------------------------------------------
-    
-//    
-    for (Cell *cell in self.boardCells) {
-        NSLog(@"location=%@     content=%@    x=%f y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
-    }
-
-    
-    self.blankRow=moveToRowLocation;
-    self.blankColumn=moveToColumnLocation;
-    
-    NSLog(@"blank=====>  row=%d column=%d",self.blankRow,self.blankColumn);
 
 }
 
@@ -329,8 +263,19 @@
     return blankLocation;
 }
 
-// used to replace objects at board's cells array
--(int)locationIndex:(NSString *)content
+-(int)locationIndex:(NSString *)location
+{
+    int index=-1;
+    for (int i=0; i<self.boardCells.count; i++) {
+        Cell *cell=[self.boardCells objectAtIndex:i];
+        if ([cell.location isEqualToString:location]) {
+            index=i;
+        }
+    }
+    return index;
+}
+
+-(int)contentIndex:(NSString *)content
 {
     int index=-1;
     for (int i=0; i<self.boardCells.count; i++) {
@@ -340,6 +285,100 @@
         }
     }
     return index;
+}
+
+// board animation
+-(void)boardAnimationFromLocation:(int)sourceLocation toLocation:(int)targetLocation
+{
+    // SOURCE
+    int locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",sourceLocation]];
+    NSLog(@"locationIndex=%d",locationIndex);
+    
+    Cell *sourceCell=[self.boardCells objectAtIndex:locationIndex];
+    NSLog(@"SOURCE CELL LOCATION = %@",sourceCell.location);
+    NSLog(@"SOURCE CELL CONTENT = %@",sourceCell.locationContent);
+    
+    int contentTag=[sourceCell.locationContent intValue];
+    
+    
+    // TARGET
+    
+    int targetIndex=[self locationIndex:[NSString stringWithFormat:@"%d",targetLocation]];
+    NSLog(@"targetIndex=%d",targetIndex);
+    
+    Cell *targetCell=[self.boardCells objectAtIndex:targetIndex];
+    NSLog(@"TARGET CELL X=%f  Y=%f",targetCell.locationCoordinate.x,targetCell.locationCoordinate.y);
+    
+
+
+    [UIView animateWithDuration:BOARD_ANIMATION_TIME animations:^(void)
+     // Aqui se faz a animacao
+     {
+         
+         for (UIView *subview in self.view.subviews)
+         {
+             if (subview.tag==contentTag) {
+                 subview.center=CGPointMake(subview.center.x+BOARD_CELL_WIDTH, subview.center.y+BOARD_CELL_HEIGHT);
+             }
+         }
+         
+     } completion:^(BOOL finished)
+     //  Aqui executamos os procedimentos logo apos o termino da animacao
+     {
+     }];
+    // FIM DA ANIMACAO
+    [UIView commitAnimations];
+    
+//    // ----------------------------------
+//    // Update references //
+//    //    NSLog(@"***Step 1***");
+//    // get location index in array -- Step 1  ----------------------------------
+//    locationIndex=[self locationIndex:@"9999"];
+//    int tempValue=TEMP_VALUE_FACTOR+movingLocation;
+//    
+//    
+//    Cell *newCell=[self.boardCells objectAtIndex:locationIndex];
+//    newCell.locationContent=[NSString stringWithFormat:@"%d",tempValue];
+//    
+//    // Update array
+//    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell];
+//    // --------------------------------------------------------------------------
+//    
+//    //    NSLog(@"***Step 2***    movinLocation=%d",movingLocation);
+//    // get location index in array -- Step 2  ----------------------------------
+//    locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",movingLocation]];
+//    
+//    Cell *newCell2=[self.boardCells objectAtIndex:locationIndex];
+//    newCell2.locationContent=@"9999";
+//    
+//    // Update array
+//    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell2];
+//    // --------------------------------------------------------------------------
+//    
+//    //    NSLog(@"***Step 3***");
+//    // get location index in array -- Step 3  ----------------------------------
+//    locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",tempValue]];
+//    
+//    Cell *newCell3=[self.boardCells objectAtIndex:locationIndex];
+//    tempValue=tempValue-TEMP_VALUE_FACTOR;
+//    newCell3.locationContent=[NSString stringWithFormat:@"%d",tempValue];
+//    
+//    // Update array
+//    [self.boardCells replaceObjectAtIndex:locationIndex withObject:newCell3];
+//    // --------------------------------------------------------------------------
+//    
+//    //
+//    //    for (Cell *cell in self.boardCells) {
+//    //        NSLog(@"location=%@     content=%@    x=%f y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
+//    //    }
+//    
+//    
+//    self.blankRow=moveToRowLocation;
+//    self.blankColumn=moveToColumnLocation;
+//    
+//    NSLog(@"blank=====>  row=%d column=%d",self.blankRow,self.blankColumn);
+    
+
 }
 
 #pragma mark - Memory Warning
