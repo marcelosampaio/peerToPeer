@@ -16,6 +16,7 @@
 //@property float swipeBaseY;
 
 @property(nonatomic,strong) NSArray *blankCandidates;
+@property(nonatomic,strong) NSArray *boardCellImageName;
 
 // array of coard's cell objects
 @property(nonatomic,strong) NSMutableArray *boardCells;

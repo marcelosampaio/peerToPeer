@@ -44,10 +44,15 @@
 //@synthesize cells;
 @synthesize boardCells;
 
+@synthesize boardCellImageName;
+
 #pragma mark - Initialization
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // Set images names
+    [self imageNames];
     
     // Create board
     [self createBoard];
@@ -125,15 +130,10 @@
         if (rowIndex==0 || columnIndex==0 || rowIndex==5 || columnIndex==5) {
             img.backgroundColor=[UIColor darkGrayColor];
         } else {
-            if (rowIndex==1) {
-                img.backgroundColor=[UIColor yellowColor];
-            }else if (rowIndex==2) {
-                img.backgroundColor=[UIColor greenColor];
-            }else if (rowIndex==3) {
-                img.backgroundColor=[UIColor blueColor];
-            }else{
-                img.backgroundColor=[UIColor redColor];
-            }
+            int randomIndex=arc4random() % 5;
+            NSLog(@"%d",randomIndex);
+            img.image=[UIImage imageNamed:[self.boardCellImageName objectAtIndex:randomIndex]];
+            img.backgroundColor=[UIColor lightGrayColor];
             // board's cell object
             Cell *cell=[[Cell alloc]initWithLocation:location coordinate:CGPointMake(coordinateX, coordinateY) content:location];
             [self.boardCells addObject:cell];
@@ -142,6 +142,11 @@
         img.tag=numericLocation;
         [self.view addSubview:img];
     }
+}
+
+-(void)imageNames
+{
+    self.boardCellImageName=[[NSArray alloc]initWithObjects:@"_LeftRight",@"_TopDown",@"_LeftTop",@"_LeftDown",@"_RightTop",@"_RightDown", nil];
 }
 
 #pragma mark - UI Actions
@@ -259,18 +264,6 @@
     for (int i=0; i<self.boardCells.count; i++) {
         Cell *cell=[self.boardCells objectAtIndex:i];
         if ([cell.location isEqualToString:location]) {
-            index=i;
-        }
-    }
-    return index;
-}
-
--(int)contentIndex:(NSString *)content
-{
-    int index=-1;
-    for (int i=0; i<self.boardCells.count; i++) {
-        Cell *cell=[self.boardCells objectAtIndex:i];
-        if ([cell.locationContent isEqualToString:content]) {
             index=i;
         }
     }
