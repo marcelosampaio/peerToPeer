@@ -73,13 +73,10 @@
         }
     }
     
-//    // Update board cell object array with the "real" X,Y cooirdinates (they depend on screen resolution & device)
-//    [self updateBoardCellCoordinates];
-    
-    // debugging my object array - viewing my stored objects (board's cells)
-    for (Cell *cell in self.boardCells) {
-        NSLog(@"(init) CELL  location=%@       content=%@       x=%f  y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
-    }
+//    // debugging my object array - viewing my stored objects (board's cells)
+//    for (Cell *cell in self.boardCells) {
+//        NSLog(@"(init) CELL  location=%@       content=%@       x=%f  y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
+//    }
 
 //    for (UIView *subView in self.view.subviews) {
 //        NSLog(@"=====VIEW  tag=%d  ...   x=%f  y=%f",subView.tag,subView.center.x,subView.center.y);
@@ -117,8 +114,6 @@
         
         blankRow=blankSpacePositionNumber/10;
         blankColumn=blankSpacePositionNumber-(blankRow*10);
-        
-        NSLog(@"generated blank Row & Column  ----> row=%d  column=%d",self.blankRow,self.blankColumn);
     }
     
     
@@ -148,27 +143,6 @@
         [self.view addSubview:img];
     }
 }
-
-//-(void)updateBoardCellCoordinates
-//{
-//    //Get only valid tags of the view
-//    for (UIView *subview in self.view.subviews) {
-//        int locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",subview.tag]];
-//
-//        // Set a valid range to update (there are more views than the board cells)
-//        if ([self isValidTag:subview.tag]) {
-//            NSLog(@"subview.tag=%d  locationIndex=%d",subview.tag,locationIndex);
-//            int locationIndex=[self locationIndex:[NSString stringWithFormat:@"%d",subview.tag]];
-//            Cell *cell=[self.boardCells objectAtIndex:locationIndex];
-//            cell.locationCoordinate=subview.center;
-//            [self.boardCells replaceObjectAtIndex:locationIndex withObject:cell];
-//        }
-//
-//    }
-//}
-
-
-
 
 #pragma mark - UI Actions
 - (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender
@@ -217,7 +191,6 @@
 
     if ([direction isEqualToString:@"left"]) {
         if (self.blankColumn==4) {
-            NSLog(@"LEFT - invalid swipe");
             return;
         } else {
             moveToRowLocation=self.blankRow;
@@ -228,7 +201,6 @@
         
     } else if (([direction isEqualToString:@"right"])) {
         if (self.blankColumn==1) {
-            NSLog(@"RIGHT - invalid swipe");
             return;
         } else {
             moveToRowLocation=self.blankRow;
@@ -238,7 +210,6 @@
         }
     } else if (([direction isEqualToString:@"up"])) {
         if (self.blankRow==4) {
-            NSLog(@"UP - invalid swipe");
             return;
         } else {
             moveToRowLocation=self.blankRow+1;
@@ -248,7 +219,6 @@
         }
     } else if (([direction isEqualToString:@"down"])) {
         if (self.blankRow==1) {
-            NSLog(@"DOWN - swipe invalido");
             return;
         } else {
             moveToRowLocation=self.blankRow-1;
@@ -261,26 +231,13 @@
     int targetLocation=(self.blankRow*10)+self.blankColumn;
 
     // Animate board cells
-    NSLog(@"WILL animate from location (sourceLocation):%d   rowSeed=%d  columnSeed=%d",sourceLocation,rowSeed,columnSeed);
-    NSLog(@"WILL animate to location (targetLocation):%d",targetLocation);
-    
     [self boardAnimationFromLocation:sourceLocation toLocation:targetLocation rowSeed:rowSeed columnSeed:columnSeed];
     
     // Update references //
     [self updateContentsAtSourceLocation:sourceLocation targetLocation:targetLocation];
 
-
-    for (Cell *cell in self.boardCells) {
-        NSLog(@"AFTER ANIMATION - location=%@     content=%@    x=%f y=%f",cell.location,cell.locationContent,cell.locationCoordinate.x,cell.locationCoordinate.y);
-    }
-    
-    
     self.blankRow=moveToRowLocation;
     self.blankColumn=moveToColumnLocation;
-    
-    NSLog(@"blank=====>  row=%d column=%d",self.blankRow,self.blankColumn);
-
-
 }
 
 #pragma mark - Working Methods
@@ -365,7 +322,6 @@
 
 -(void)updateContentsAtSourceLocation:(int)sourceLocation targetLocation:(int)targetLocation
 {
-    NSLog(@"############# UPDATE REFERENCES ########### source:%d  target=%d",sourceLocation,targetLocation);
     int sourceIndex=[self locationIndex:[NSString stringWithFormat:@"%d",sourceLocation]];
     Cell *sourceCell=[self.boardCells objectAtIndex:sourceIndex];
     NSString *sourceContent=sourceCell.locationContent;
@@ -374,20 +330,12 @@
     // update array of objects
     [self.boardCells replaceObjectAtIndex:sourceIndex withObject:sourceCell];
 
-    
-
     int targetIndex=[self locationIndex:[NSString stringWithFormat:@"%d",targetLocation]];
     Cell *targetCell=[self.boardCells objectAtIndex:targetIndex];
-//    NSString *targetContent=targetCell.locationContent;
     // override target content
     targetCell.locationContent=sourceContent;
     // update array of objects
     [self.boardCells replaceObjectAtIndex:targetIndex withObject:targetCell];
-    
-    
-
-    
-    
 
 }
 
