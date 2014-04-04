@@ -28,6 +28,8 @@
 		9CFD62CC18EE0C6000562928 /* _LeftTop.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CFD62C618EE0C6000562928 /* _LeftTop.png */; };
 		9CFD62CD18EE0C6000562928 /* _LeftDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CFD62C718EE0C6000562928 /* _LeftDown.png */; };
 		9CFD62CE18EE0C6000562928 /* _RightTop.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CFD62C818EE0C6000562928 /* _RightTop.png */; };
+		9CFD62D018EE54DF00562928 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CFD62CF18EE54DF00562928 /* AudioToolbox.framework */; };
+		9CFD62D218EE56E200562928 /* flapSound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9CFD62D118EE56E200562928 /* flapSound.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +70,8 @@
 		9CFD62C618EE0C6000562928 /* _LeftTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _LeftTop.png; sourceTree = "<group>"; };
 		9CFD62C718EE0C6000562928 /* _LeftDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _LeftDown.png; sourceTree = "<group>"; };
 		9CFD62C818EE0C6000562928 /* _RightTop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = _RightTop.png; sourceTree = "<group>"; };
+		9CFD62CF18EE54DF00562928 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		9CFD62D118EE56E200562928 /* flapSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = flapSound.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9CFD62D018EE54DF00562928 /* AudioToolbox.framework in Frameworks */,
 				9CA70E8618DE76F20098E4B3 /* CoreGraphics.framework in Frameworks */,
 				9CA70E8818DE76F20098E4B3 /* UIKit.framework in Frameworks */,
 				9CA70E8418DE76F20098E4B3 /* Foundation.framework in Frameworks */,
@@ -116,6 +121,7 @@
 		9CA70E8218DE76F20098E4B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9CFD62CF18EE54DF00562928 /* AudioToolbox.framework */,
 				9CA70E8318DE76F20098E4B3 /* Foundation.framework */,
 				9CA70E8518DE76F20098E4B3 /* CoreGraphics.framework */,
 				9CA70E8718DE76F20098E4B3 /* UIKit.framework */,
@@ -145,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				9CA70E8B18DE76F20098E4B3 /* peerToPeer-Info.plist */,
+				9CFD62D118EE56E200562928 /* flapSound.wav */,
 				9CA70E8C18DE76F20098E4B3 /* InfoPlist.strings */,
 				9CA70E8F18DE76F20098E4B3 /* main.m */,
 				9CA70E9118DE76F20098E4B3 /* peerToPeer-Prefix.pch */,
@@ -260,6 +267,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9CA70E9C18DE76F20098E4B3 /* Images.xcassets in Resources */,
+				9CFD62D218EE56E200562928 /* flapSound.wav in Resources */,
 				9CFD62CE18EE0C6000562928 /* _RightTop.png in Resources */,
 				9CA70E8E18DE76F20098E4B3 /* InfoPlist.strings in Resources */,
 				9CFD62CD18EE0C6000562928 /* _LeftDown.png in Resources */,

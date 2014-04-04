@@ -46,6 +46,9 @@
 
 @synthesize boardCellImageName;
 
+// AudioToolBox property
+@synthesize soundId;
+
 #pragma mark - Initialization
 - (void)viewDidLoad
 {
@@ -232,6 +235,11 @@
             columnSeed=BOARD_CELL_HEIGHT;
         }
     }
+    
+    // Flappy Sound in animation
+    [self playAnimationSound];
+    
+    
     int sourceLocation=(moveToRowLocation*10)+moveToColumnLocation;
     int targetLocation=(self.blankRow*10)+self.blankColumn;
 
@@ -331,6 +339,16 @@
     [self.boardCells replaceObjectAtIndex:targetIndex withObject:targetCell];
 
 }
+
+-(void)playAnimationSound
+{
+    // Flapp sound
+    NSURL *url=[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"flapSound" ofType:@"wav"]];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundId);
+    AudioServicesPlaySystemSound(soundId);
+    // end sound
+}
+
 
 
 #pragma mark - Memory Warning

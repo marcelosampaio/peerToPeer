@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
+
 
 @interface ViewController : UIViewController
 
@@ -18,8 +20,13 @@
 @property(nonatomic,strong) NSArray *blankCandidates;
 @property(nonatomic,strong) NSArray *boardCellImageName;
 
-// array of coard's cell objects
+// array of board's cell objects
 @property(nonatomic,strong) NSMutableArray *boardCells;
+
+// AudioToolBox property
+@property SystemSoundID soundId;
+
+
 
 - (IBAction)handleSwipe:(UISwipeGestureRecognizer *)sender;
 
